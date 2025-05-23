@@ -1,0 +1,8 @@
+# Mac OS files
+.DS_Store
+Thumbs.db
+
+# Virtual environments
+env/
+venv/
+.venv/
