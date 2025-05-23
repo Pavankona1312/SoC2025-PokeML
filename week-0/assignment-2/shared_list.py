@@ -5,7 +5,7 @@ favorite_colors = [
     "blue",
     "green",
     # Add your favorite color below this line
-    "red"
+    "yellow"
 ]
 
 def display_info():
