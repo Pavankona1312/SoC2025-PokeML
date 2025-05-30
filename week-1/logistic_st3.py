@@ -1,9 +1,5 @@
 import pandas as pd
 import numpy as np
-from sklearn.linear_model import LogisticRegression
-from sklearn.multioutput import MultiOutputClassifier
-from sklearn.metrics import accuracy_score, classification_report
-from sklearn.preprocessing import MultiLabelBinarizer
 
 # loading data 
 train = pd.read_csv("trainst3.csv")
@@ -16,21 +12,59 @@ def parse_labels(labels):
 y_train = parse_labels(train['color'])
 y_test = parse_labels(test['color'])
 
-mlb = MultiLabelBinarizer()
-Y_train = mlb.fit_transform(y_train)
-Y_test = mlb.transform(y_test)
+# one-hot encoding
+all_labels = sorted(set(l for sublist in y_train for l in sublist))
+label_to_index = {label: i for i, label in enumerate(all_labels)}
+index_to_label = {i: label for label, i in label_to_index.items()}
+
+def encode(y):
+    encoded = np.zeros((len(y), len(all_labels)))
+    for i, labels in enumerate(y):
+        for label in labels:
+            encoded[i, label_to_index[label]] = 1
+    return encoded
+
+Y_train = encode(y_train)
+Y_test = encode(y_test)
 
 # conditions and training
-X_train = train[['x', 'y']]
-X_test = test[['x', 'y']]
+X_train = train[['x', 'y']].to_numpy()
+X_test = test[['x', 'y']].to_numpy()
 
-logreg = LogisticRegression(max_iter=1000, random_state=42)
-multi_model = MultiOutputClassifier(logreg)
-multi_model.fit(X_train, Y_train)
+# sigmoid function
+def sigmoid(z):
+    return 1 / (1 + np.exp(-z))
 
-Y_pred = multi_model.predict(X_test)
+# training logistic regression from scratch
+def train_logistic(X, Y, lr=0.1, epochs=1000):
+    m, n = X.shape
+    k = Y.shape[1]
+    W = np.zeros((n, k))
+    b = np.zeros((1, k))
+
+    for epoch in range(epochs):
+        Z = np.dot(X, W) + b
+        A = sigmoid(Z)
+        dZ = A - Y
+        dW = np.dot(X.T, dZ) / m
+        db = np.sum(dZ, axis=0, keepdims=True) / m
+
+        W -= lr * dW
+        b -= lr * db
+
+    return W, b
+
+# predict function
+def predict(X, W, b):
+    probs = sigmoid(np.dot(X, W) + b)
+    return (probs >= 0.5).astype(int)
+
+# training model
+W, b = train_logistic(X_train, Y_train)
+
+# prediction
+Y_pred = predict(X_test, W, b)
 
 # final result 
-print("Accuracy", (Y_pred == Y_test).mean()*100, "%")
-
-
+accuracy = np.mean(Y_pred == Y_test) * 100
+print("Accuracy", accuracy, "%")
