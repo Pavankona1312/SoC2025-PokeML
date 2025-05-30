@@ -4,6 +4,9 @@ This folder contains all the datasets used for training and testing files used i
 
 ### Contents:
 
+- **smoldata.csv**
+  This is a small dataset for Task-1.
+  
 - **house_rent_dataset.csv**  
   Dataset containing over 4700 samples for predicting house rent prices. Used for Task 1 Big Regression.
 
