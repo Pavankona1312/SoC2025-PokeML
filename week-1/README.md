@@ -10,9 +10,8 @@ In week 1, we will be implementing **Linear Regression** and **Logistic Regressi
 - Predicts fruit yield from climate data using gradient descent. 
 ### Big Regression
 - Predicts house rent from 4700+ samples.  
-- Train-test split and MSE evaluation performed.  
-- Files:  
-  - [house_rent_train.csv](./week-1/training and testing files/house_rent_dataset.csv)  
+- Train-test split and MSE evaluation performed.   
+  - [house_rent_train.csv] 
 ---
 
 ## Task 2: Basic Logistic Regression
