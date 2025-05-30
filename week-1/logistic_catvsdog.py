@@ -1,8 +1,6 @@
 import os # for kaggle archive
 from PIL import Image
 import numpy as np
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score
 
 # accessing the archive
 base_folder = "archive"
@@ -41,15 +39,42 @@ X_dog_test, y_dog_test = load_images_from_folder(test_dog_folder, 1)
 X_test = np.array(X_cat_test + X_dog_test)
 y_test = np.array(y_cat_test + y_dog_test)
 
+# sigmoid function
+def sigmoid(z):
+    return 1 / (1 + np.exp(-z))
+
+# training logistic regression from scratch
+def train_logistic(X, y, lr=0.1, epochs=100):
+    m, n = X.shape
+    w = np.zeros(n)
+    b = 0
+
+    for epoch in range(epochs):
+        z = np.dot(X, w) + b
+        a = sigmoid(z)
+        dz = a - y
+        dw = np.dot(X.T, dz) / m
+        db = np.sum(dz) / m
+
+        w -= lr * dw
+        b -= lr * db
+
+        if epoch % 10 == 0:
+            loss = -np.mean(y * np.log(a + 1e-8) + (1 - y) * np.log(1 - a + 1e-8))
+            print(f"Epoch {epoch}: Loss = {loss:.4f}")
+
+    return w, b
+
+# predict function
+def predict(X, w, b):
+    probs = sigmoid(np.dot(X, w) + b)
+    return (probs >= 0.5).astype(int)
+
 # training our logistic regression 
-clf = LogisticRegression(max_iter=500, solver='lbfgs')
 print("Training model...")
-clf.fit(X_train, y_train)
+w, b = train_logistic(X_train, y_train, lr=0.1, epochs=100)
 
 # final results 
-y_pred = clf.predict(X_test)
-accuracy = accuracy_score(y_test, y_pred)
+y_pred = predict(X_test, w, b)
+accuracy = np.mean(y_pred == y_test)
 print(f"Test accuracy (Cats vs Dogs): {accuracy * 100:.2f}%")
-
-
-
