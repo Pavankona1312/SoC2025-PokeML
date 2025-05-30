@@ -11,7 +11,7 @@ In week 1, we will be implementing **Linear Regression** and **Logistic Regressi
 ### Big Regression
 - Predicts house rent from 4700+ samples.  
 - Train-test split and MSE evaluation performed.   
-  - [house_rent_train.csv](./SoC2025-PokeML/week-1/training and testing files/house_rent_dataset.csv) 
+  - [house_rent_dataset.csv](./SoC2025-PokeML/week-1/training%20and%20testing%20files/house_rent_dataset.csv)
 ---
 
 ## Task 2: Basic Logistic Regression
