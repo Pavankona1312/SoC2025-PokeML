@@ -8,7 +8,7 @@ This folder contains all the datasets used for training and testing files used i
   Dataset containing over 4700 samples for predicting house rent prices. Used for Task 1 Big Regression.
 
 - **trainst1.csv, testst1.csv**  
-  Training and testing data for Subtask 1 (Parabola Classification) in Task 2 Basic Logistic Regression.
+  Training and testing data for Subtask 1 (Parabola Classification) in Task 2.
 
 - **trainst2.csv, testst2.csv**  
   Training and testing data for Subtask 2 (Multi-Class Classification) in Task 2.
