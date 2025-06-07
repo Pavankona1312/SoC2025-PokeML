@@ -18,9 +18,5 @@
 
 ## Task 3: Cats vs Dogs Classification
 
-- Extended neural network to classify cats vs dogs.
-- Used sigmoid activation at output layer for binary classification.
-- Input: flattened grayscale image vectors.
-- Normalized inputs between 0 and 1.
-- Logged loss and predictions after training.
+yet to be done
 
