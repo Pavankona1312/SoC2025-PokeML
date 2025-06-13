@@ -48,7 +48,8 @@ def train_model(model, train_data, test_data, num_epochs, loss_func, optimizer, 
         y_pred = model(X)
         total += y.size(0)
         correct += (y_pred.argmax(1)==y).sum().item()
-      print(f"Accuracy: {correct/total}")
+      print(f"Accuracy: {(correct/total)*100}")
+  print("Training Done")
 
 model_CIFAR = nn.Sequential(nn.Conv2d(3,6,5),nn.ReLU(),nn.MaxPool2d(2,2),
                             nn.Conv2d(6,16,5),nn.ReLU(),nn.MaxPool2d(2,2),
@@ -65,7 +66,7 @@ loss_func = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model_CIFAR.parameters(), lr=learning_rate)
 num_epochs = 10
 model_CIFAR.to(device)
-print("Training CIFAR10 data")
+print("Training model with CIFAR10 data")
 train_model(model_CIFAR, train_batch, test_batch, num_epochs, loss_func, optimizer, device)
 
 transform_fashion = transforms.Compose([transforms.ToTensor(), transforms.Normalize((0.1307), (0.3081))])
@@ -88,5 +89,5 @@ loss_func = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model_fashion.parameters(), lr=learning_rate)
 num_epochs = 15
 model_fashion.to(device)
-print("Training Fashion MNIST data")
+print("Training model with Fashion MNIST data")
 train_model(model_fashion, train_batch, test_batch, num_epochs, loss_func, optimizer, device)
