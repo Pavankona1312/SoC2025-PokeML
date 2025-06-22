@@ -21,4 +21,16 @@
 | 17    | 4           | 32, 64, 128, 256                   | 3/1, 3/1, 3/1, 3/1                    | 512 → 102                                | ELU          | Avg          | 0.3             | LayerNorm (conv)           | ExponentialLR (0.95)          | 54–56       | 50.90        | Fast-convergence, underperformed due to pooling/norm         |
 | 18    | 4           | 32, 64, 128, 256                   | 3/1, 3/1, 3/1, 3/1                    | 1024 → 256 → 102                         | GELU         | Max          | 0.4             | BatchNorm (conv)           | CosineAnnealingLR (T_max=5)   | 62–64       | 60.47        | Modern activation + scheduler, smoother convergence          |
 
+### Experiment Visualizations
 
+####  Exp 15 – Baseline
+![Exp 15](./i1.jpeg)
+
+#### 🔹 Exp 16 – LeakyReLU + StepLR + Dropout
+![Exp 16](./i2.jpeg)
+
+#### 🔹 Exp 17 – ELU + AvgPool + LayerNorm
+![Exp 17](./i3.jpeg)
+
+#### 🔹 Exp 18 – GELU + CosineAnnealingLR
+![Exp 18](./i4.jpeg)
