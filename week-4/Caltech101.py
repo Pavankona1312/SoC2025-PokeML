@@ -121,14 +121,22 @@ model.to(device)
 learning_rate = 0.01
 loss_func = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-num_epochs = 40 #Change the number of epochs according to your processor.
+num_epochs = 40 # Change the number of epochs according to your processor.
 train_loss,val_acc = train_model(model, train_batch, test_batch, val_batch,num_epochs, loss_func, optimizer, device)
 
 #Use the lists and plot the Training Loss and Validation Accuracies.
+epochs = list(range(1, num_epochs))
 
+plt.plot(epochs, train_loss, 'ro')
+plt.plot(epochs, val_acc, 'b*')
+plt.xlabel('Epochs')
+plt.ylabel('Value')
+plt.title('Training Loss and Validation Accuracy')
+plt.legend()
+plt.show()
 
 '''
-I am Providing some more models I experimented, Do check them out.
+I am providing some additional models that I experimented with. Please check them out.
 
 model = nn.Sequential(nn.BatchNorm2d(3),                     
                       nn.Conv2d(3,64,7,stride=2,padding=3,bias=False),nn.BatchNorm2d(64),nn.LeakyReLU(negative_slope=0.05),nn.MaxPool2d(2,2), #56,56
