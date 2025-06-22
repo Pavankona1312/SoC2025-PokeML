@@ -1,4 +1,4 @@
-### 📊 Caltech-101 CNN Model Experiments
+### Caltech-101 CNN Model Experiments
 
 | Exp # | Conv Layers | Filters (per layer)                | Kernel / Stride (per layer)          | Fully Connected Layers                          | Activation   | Pooling      | Dropout         | Normalization              | LR Scheduler                   | Val Acc (%) | Test Acc (%) | Notes                                                        |
 |:-----:|:-----------:|:----------------------------------:|:------------------------------------:|:-----------------------------------------------:|:------------:|:------------:|:----------------:|:----------------------------:|:-------------------------------:|:-----------:|:------------:|:-------------------------------------------------------------|
@@ -20,3 +20,5 @@
 | 16    | 4           | 32, 64, 128, 256                   | 3/1, 3/1, 3/1, 3/1                    | 1024 → 256 → 102                         | LeakyReLU    | Max          | 0.5 (after FC1) | BatchNorm (conv)           | StepLR (5, 0.5)               | 67–68       | 65.40        | Strong generalization with dropout, batch norm, LR scheduling|
 | 17    | 4           | 32, 64, 128, 256                   | 3/1, 3/1, 3/1, 3/1                    | 512 → 102                                | ELU          | Avg          | 0.3             | LayerNorm (conv)           | ExponentialLR (0.95)          | 54–56       | 50.90        | Fast-convergence, underperformed due to pooling/norm         |
 | 18    | 4           | 32, 64, 128, 256                   | 3/1, 3/1, 3/1, 3/1                    | 1024 → 256 → 102                         | GELU         | Max          | 0.4             | BatchNorm (conv)           | CosineAnnealingLR (T_max=5)   | 62–64       | 60.47        | Modern activation + scheduler, smoother convergence          |
+
+
