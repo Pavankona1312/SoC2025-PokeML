@@ -1,4 +1,32 @@
-### Caltech-101 CNN Model Experiments
+# Caltech101 Image Classifier
+
+## About Caltech101.py
+- Dataset is downloaded from Kaggle API (tested on Google Colab).
+- Splits the dataset into training, validation, and test sets.
+#### Model Architecture
+- This model is a deep convolutional neural network designed for classifying Caltech101 images into 102 categories.
+- 4 convolutional blocks:  
+  -`Conv2d → BatchNorm2d → LeakyReLU → MaxPool2d`, with increasing channels: 64 → 128 → 256 → 512.
+- Flattened output passed through:  
+  - `Linear(512×5×5 → 4096 → 1024 → 256 → 102)` with `BatchNorm1d`, `LeakyReLU`, and `Dropout` between layers.
+ 
+#### Training Setup
+- **Loss Function**: `CrossEntropyLoss`
+- **Optimizer**: `Adam` (learning rate = 0.01)
+- **Epochs**: Configurable (default: 25)
+- **Reproducibility**: Enabled via seeds and deterministic settings
+- **Split**: 70% train / 10% val / 20% test
+
+#### Output
+- Plots training loss and validation accuracy across epochs
+- Prints final test accuracy
+
+#### The Final Plot
+![](./Loss&Acc_Plots.jpeg)
+
+> ⚠️ Recommended to run on **Google Colab** for dataset commands to work
+
+## Caltech-101 CNN Model Experiments
 
 | Exp # | Conv Layers | Filters (per layer)                | Kernel / Stride (per layer)          | Fully Connected Layers                          | Activation   | Pooling      | Dropout         | Normalization              | LR Scheduler                   | Val Acc (%) | Test Acc (%) | Notes                                                        |
 |:-----:|:-----------:|:----------------------------------:|:------------------------------------:|:-----------------------------------------------:|:------------:|:------------:|:----------------:|:----------------------------:|:-------------------------------:|:-----------:|:------------:|:-------------------------------------------------------------|
