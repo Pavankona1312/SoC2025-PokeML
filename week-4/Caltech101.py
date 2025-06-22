@@ -70,7 +70,7 @@ def train_model(model, train_data, test_data, val_data, num_epochs, loss_func, o
       tot_loss+=loss
     avg_loss = (tot_loss/len(train_data))
     print(f"Epoch: {i+1}, Avg Loss: {avg_loss:.4f}")
-    train_loss.append(avg_loss)
+    train_loss.append(avg_loss.cpu())
     model.eval()
     with torch.no_grad():
       correct = 0
@@ -121,14 +121,14 @@ model.to(device)
 learning_rate = 0.01
 loss_func = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-num_epochs = 40 # Change the number of epochs according to your processor.
+num_epochs = 25 # Change the number of epochs according to your processor.
 train_loss,val_acc = train_model(model, train_batch, test_batch, val_batch,num_epochs, loss_func, optimizer, device)
 
 #Use the lists and plot the Training Loss and Validation Accuracies.
-epochs = list(range(1, num_epochs))
+epochs = list(range(1, num_epochs+1))
 
-plt.plot(epochs, train_loss, 'ro')
-plt.plot(epochs, val_acc, 'b*')
+plt.plot(epochs, [loss.detach().cpu().item() for loss in train_loss], 'r', label='Training Loss')  # IDk with the code of the line. gpt gave it.
+plt.plot(epochs, val_acc, 'b', label='Validation Accuracy')
 plt.xlabel('Epochs')
 plt.ylabel('Value')
 plt.title('Training Loss and Validation Accuracy')
@@ -139,18 +139,18 @@ plt.show()
 I am providing some additional models that I experimented with. Please check them out.
 
 model = nn.Sequential(nn.BatchNorm2d(3),                     
-                      nn.Conv2d(3,64,7,stride=2,padding=3,bias=False),nn.BatchNorm2d(64),nn.LeakyReLU(negative_slope=0.05),nn.MaxPool2d(2,2), #56,56
-                      nn.Conv2d(64,128,5,padding=2),nn.BatchNorm2d(128),nn.LeakyReLU(negative_slope=0.05),nn.MaxPool2d(2,2), #28,28
-                      nn.Conv2d(128,256,5,padding=2),nn.BatchNorm2d(256),nn.LeakyReLU(negative_slope=0.05),nn.MaxPool2d(2,2), #14,14
-                      nn.Conv2d(256,512,5),nn.BatchNorm2d(512),nn.LeakyReLU(negative_slope=0.05),nn.MaxPool2d(2,2), #5,5
+                      nn.Conv2d(3,64,7,stride=2,padding=3,bias=False),nn.BatchNorm2d(64),nn.LeakyReLU(negative_slope=0.1),nn.MaxPool2d(2,2), #56,56
+                      nn.Conv2d(64,128,5,padding=2),nn.BatchNorm2d(128),nn.LeakyReLU(negative_slope=0.1),nn.MaxPool2d(2,2), #28,28
+                      nn.Conv2d(128,256,5,padding=2),nn.BatchNorm2d(256),nn.LeakyReLU(negative_slope=0.1),nn.MaxPool2d(2,2), #14,14
+                      nn.Conv2d(256,512,5),nn.BatchNorm2d(512),nn.LeakyReLU(negative_slope=0.1),nn.MaxPool2d(2,2), #5,5
                       nn.Flatten(),
-                      nn.Linear(512*5*5,4096),nn.BatchNorm1d(4096),nn.LeakyReLU(negative_slope=0.05),
+                      nn.Linear(512*5*5,4096),nn.BatchNorm1d(4096),nn.LeakyReLU(negative_slope=0.1),
                       nn.Dropout(p=0.3),
-                      nn.Linear(4096,1024),nn.BatchNorm1d(1024),nn.LeakyReLU(negative_slope=0.05),
+                      nn.Linear(4096,1024),nn.BatchNorm1d(1024),nn.LeakyReLU(negative_slope=0.1),
                       nn.Dropout(p=0.2),
-                      nn.Linear(1024,256),nn.BatchNorm1d(256),nn.LeakyReLU(negative_slope=0.05),
+                      nn.Linear(1024,256),nn.BatchNorm1d(256),nn.LeakyReLU(negative_slope=0.1),
                       nn.Dropout(p=0.2),
-                      nn.Linear(256,128),nn.BatchNorm1d(128),nn.LeakyReLU(negative_slope=0.05),
+                      nn.Linear(256,128),nn.BatchNorm1d(128),nn.LeakyReLU(negative_slope=0.1),
                       nn.Linear(128,102))
 
 model = nn.Sequential(nn.BatchNorm2d(3),           
