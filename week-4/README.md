@@ -1,81 +1,23 @@
-# Caltech-101 CNN Experiments
+## Caltech101 Model Experiments
 
-## Experiment Summary Table
+| Exp # | Conv Layers | Filters & Kernel/Stride                | FC Layers                  | Activation   | Pooling         | Dropout             | Normalization           | Val Acc (%) | Test Acc (%) | Notes                                  |
+|-------|-------------|----------------------------------------|----------------------------|--------------|-----------------|---------------------|-------------------------|-------------|--------------|----------------------------------------|
+| 1     | 5           | 3-16-64-128-256-512 <br> 5/3/5/3/3, s=1| 1024-256-102               | ReLU         | Max             | None                | None                    | -           | 8.5          | Baseline, very low accuracy            |
+| 2     | 5           | 3-16-64-128-256-512 <br> 5/3/5/3/3, s=1| 4096-1024-256-102          | ReLU         | Max             | None                | None                    | -           | 8.5          | Larger FC, no improvement              |
+| 3     | 5           | 3-16-64-128-256-512 <br> 5/3/5/5/3, s=1| 4096-1024-512-256-102      | ReLU         | Max             | None                | None                    | -           | 7.4          | Slightly different conv, still poor    |
+| 4     | 4           | 3-64-128-256-512 <br> 7/5/5/5, s=2/1   | 4096-1024-512-256-102      | ReLU         | Max             | None                | None                    | -           | 7.4          | Larger initial kernel, still poor      |
+| 5     | 4           | 3-64-128-256-512 <br> 7/5/5/5, s=2/1   | 4096-1024-512-256-102      | ReLU         | Max             | None                | BatchNorm               | 60.6        | 43.9         | BatchNorm added, big improvement       |
+| 6     | 4           | 3-64-128-256-512 <br> 7/5/5/5, s=2/1   | 4096-1024-512-256-102      | LeakyReLU    | Max             | None                | BatchNorm               | 61.4        | 49.2         | LeakyReLU, higher accuracy             |
+| 7     | 4           | 3-64-128-256-512 <br> 7/5/5/5, s=2/1   | 4096-1024-512-256-102      | LeakyReLU    | Avg/Max         | None                | BatchNorm               | 67.9        | 63.7         | AvgPool in some layers                 |
+| 8     | 4           | 3-64-128-256-512 <br> 7/5/5/5, s=2/1   | 4096-1024-512-256-102      | LeakyReLU    | Max             | Dropout (varied)    | BatchNorm               | 68.3        | 66.2         | Dropout added, best accuracy           |
+| 9     | 4           | 3-64-128-256-512 <br> 7/5/5/5, s=2/1   | 4096-1024-256-102          | LeakyReLU    | Max             | Dropout (varied)    | BatchNorm               | 68.3        | 66.1         | Reduced FC, similar performance        |
+| 10    | 4           | 3-64-128-256-512 <br> 7/5/5/5, s=2/1   | 4096-1024-256-128-102      | LeakyReLU    | Max             | Dropout (varied)    | BatchNorm               | 67.4        | 65.6         | Extra FC layer, stable                 |
+| 11    | 4           | 3-64-128-256-512 <br> 7/5/5/5, s=2/1   | 4096-1024-512-256-102      | LeakyReLU    | Max             | Dropout (higher)    | BatchNorm               | 68.3        | 66.2         | Higher dropout, stable                 |
+| 12    | 4           | 3-64-128-256-512 <br> 7/5/5/5, s=2/1   | 4096-1024-256-128-102      | LeakyReLU    | Max             | Dropout (varied)    | BatchNorm               | 68.3        | 66.1         | Best result, stable                    |
+| 13    | 4           | 3-64-128-256-512 <br> 7/5/5/5, s=2/1   | 4096-1024-256-128-102      | LeakyReLU    | Max             | Dropout (varied)    | BatchNorm (input too)    | 66.0        | 64.4         | Input BatchNorm2d, slightly lower      |
+| 14    | 4           | 3-64-128-256-512 <br> 7/5/5/5, s=2/1   | 4096-1024-256-128-102      | LeakyReLU    | Max             | Dropout (varied)    | BatchNorm (input too)    | 64.3        | 62.6         | Similar as above                       |
 
-| Exp # | Conv Layers | Filters         | Kernel/Stride | FC Layers | Activation | Pooling | Dropout | Normalization | LR Scheduler | Val Acc (%) | Test Acc (%) | Notes                        |
-|-------|-------------|-----------------|--------------|-----------|------------|---------|---------|---------------|--------------|-------------|--------------|------------------------------|
-| 1     | 3           | 32-64           | 3x3/1        | 2x256     | ReLU       | Max     | 0.5     | BatchNorm     | StepLR       | 82          | 80           | Baseline                     |
-| 2     | 5           | 32-64-128       | 3x3/1        | 2x512     | LeakyReLU  | Max     | 0.5     | BatchNorm     | StepLR       | 84          | 82           | Deeper, LeakyReLU            |
-| 3     | 5           | 32-64-128       | 3x3/1        | 2x512     | ELU        | Max     | 0.5     | BatchNorm     | StepLR       | 85          | 83           | ELU activation               |
-| 4     | 3           | 32-64           | 3x3/1        | 2x256     | ReLU       | Avg     | 0.5     | BatchNorm     | StepLR       | 80          | 78           | Average pooling              |
-| 5     | 3           | 32-64           | 3x3/1        | 2x256     | ReLU       | Max     | 0.3     | BatchNorm     | StepLR       | 81          | 79           | Lower dropout                |
-| 6     | 3           | 32-64           | 3x3/1        | 2x256     | ReLU       | Max     | 0.5     | LayerNorm     | StepLR       | 81          | 79           | LayerNorm                    |
-| 7     | 3           | 32-64           | 3x3/1        | 2x256     | ReLU       | Max     | 0.5     | BatchNorm     | ExpLR        | 81          | 79           | Exponential LR scheduler     |
-
-*Add more rows as you run additional experiments.*
-
----
-
-## Visualizations
-
-> **Tip:** Add your generated plots (as PNG/JPG/SVG) in the `images/` directory and reference them in your README.
-
-### Training & Validation Accuracy
-
-![Accuracy Curve](images/accuracy_curve.png)
-
-### Training & Validation Loss
-
-![Loss Curve](images/loss_curve.png)
-
-### Per-Class Accuracy
-
-![Per-Class Accuracy](images/per_class_accuracy.png)
-
----
-
-## Key Findings
-
-### Architecture
-- **More Conv Layers/Filters:** Improves feature extraction, but too many can cause overfitting.
-- **Kernel Size/Stride:** Larger kernels capture more context, but may miss fine details; stride affects downsampling.
-- **FC Layers:** More/larger FC layers add capacity but risk overfitting.
-
-### Activation Functions
-- **ReLU:** Fast and effective, but can cause dead neurons.
-- **LeakyReLU/ELU:** Helps with dead neurons and improves convergence in deeper networks.
-
-### Pooling
-- **Max Pooling:** Preserves sharp features, generally better for object classification.
-- **Average Pooling:** Smoother, but can lose salient features.
-
-### Dropout
-- **Standard Dropout:** Reduces overfitting; optimal rate (0.3–0.5) depends on architecture.
-- **Inverted Dropout:** Similar effect, implementation detail.
-
-### Normalization
-- **BatchNorm:** Accelerates and stabilizes training, enables higher learning rates.
-- **LayerNorm:** Useful for small batch sizes.
-
-### Learning Rate Schedulers
-- **StepLR:** Periodic drops in LR help escape plateaus.
-- **ExponentialLR:** Smooth decay, but may need careful tuning.
-
----
-
-## Recommendations
-
-- **Tune conv/pool layers first; adjust FC layers for final classification.**
-- **Use BatchNorm and Dropout for best generalization.**
-- **Try LeakyReLU or ELU if training is unstable.**
-- **Visualize training/validation curves for each experiment.**
-- **Report per-class accuracy due to dataset imbalance.**
-
----
-
-> For full experiment details, see the table above and refer to the plots for comparative analysis.
-
-```
-
-Just copy everything between the triple backticks (````markdown ... ```
-Replace the image filenames with your actual plot file names as needed!
+**Notes:**
+- "s" in "Kernel/Stride" means stride.
+- All models use nn.Flatten() before FC layers.
+- Dropout rates and normalization details are as per experiment.
