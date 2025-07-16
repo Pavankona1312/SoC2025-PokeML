@@ -48,6 +48,16 @@ Final layer outputs logits for 150 Pokémon classes.
 | Validation Accuracy | ~64.66%            |
 | Test Accuracy       | ~62.68%            |
 
+---
+
+## Graphs
+- Training accuracy vs. Epochs
+  <img width="640" height="480" alt="image" src="https://github.com/user-attachments/assets/98f63315-90d5-470d-9242-45802cc1a54b" />
+
+- Training loss vs. Epochs
+  <img width="640" height="480" alt="image" src="https://github.com/user-attachments/assets/26e3d15a-cf3d-4307-bf1f-4ba64d3992c8" />
+
+
 ### To Train:
 ```bash
 python scripts/train.py 
