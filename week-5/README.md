@@ -127,12 +127,7 @@ python scripts/preprocess.py
 python scripts/train.py
 ```
 
-6. **Run Inference**:
-```bash
-python scripts/predict.py --image_path path/to/image.jpg
-```
-
-7. **Launch Gradio App**:
+6. **Launch Gradio App**:
 ```bash
 python app.py
 ```
