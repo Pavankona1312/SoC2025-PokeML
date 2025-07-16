@@ -26,13 +26,10 @@ epochs = args.epochs
 batch_size = args.batch_size
 
 '''
-The above script gets the hyperparams from CLI. Don't change it.
+The above script gets the hyperparams from CLI. Please don't change it.
 '''
 model = CNN()
-model.load_state_dict(torch.load("../models/trained_model.pth"))
-if torch.cuda.device_count > 1:
-    print(f"Using {torch.cuda.device_count} GPUs")
-    model = nn.DataParallel(model)
+model.load_state_dict(torch.load("../models/trained_model-2.pth"))
 model.to(device)
 
 dataset = torchvision.datasets.ImageFolder(root='../data/processed')
@@ -85,4 +82,4 @@ with torch.no_grad():
         test_loss /= len(test_data)
         print(f'Test Loss: {test_loss}, Accuracy: {100. * correct / len(test_data)}%')
 
-torch.save(model.state_dict(), '../models/trained_model.pth')
+torch.save(model.state_dict(), '../models/trained_model-2.pth')
