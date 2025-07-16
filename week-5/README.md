@@ -1,11 +1,11 @@
-# Week 5: Pokémon Image Classifier
+# WEEK 5: Pokémon IMAGE CLASSIFIER
 
 ## Introduction
 This project implements a deep learning-based image classifier that identifies Pokémon from images using a custom CNN architecture we created. The classifier is trained on a 150-class Pokémon image dataset and offers Gradio-powered interface for predictions.
 
 ---
 
-## 📁 Dataset
+##  Dataset
 
 - **Source**: [Kaggle - Pokémon Classification Dataset](https://www.kaggle.com/datasets/lantian773030/pokemonclassification)
 - **Structure**: 
@@ -54,7 +54,7 @@ python scripts/train.py
 ```
 ---
 
-### Challenges faced and how we dealt it with:
+## Challenges faced and how we dealt it with:
 
 Early epochs showed significant overfitting; resolved partially via:
 
