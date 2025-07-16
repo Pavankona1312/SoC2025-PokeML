@@ -4,7 +4,7 @@ from pokemon_classifier import CNN
 import argparse
 
 model = CNN()
-model.load_state_dict(torch.load("../models/trained_model.pth"))
+model.load_state_dict(torch.load("../models/trained_model-2.pth"))
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model.to(device)
 
