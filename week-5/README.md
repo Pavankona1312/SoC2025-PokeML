@@ -42,7 +42,7 @@ Final layer outputs logits for 150 Pokémon classes.
 - **Batch size**: 32
 - **Learning rate**: 0.01
   
-- | Metric              | Value (Example)   |
+ | Metric              | Value (Example)   |
 |---------------------|------------------|
 | Training Loss       | ~0.857          |
 | Validation Accuracy | ~64.66%            |
@@ -52,6 +52,7 @@ Final layer outputs logits for 150 Pokémon classes.
 ```bash
 python scripts/train.py 
 ```
+---
 
 ### Challenges faced and how we dealt it with:
 
@@ -62,19 +63,6 @@ Early epochs showed significant overfitting; resolved partially via:
 - Batch Normalization in both convolutional and linear layers
   
 Initial test accuracy was below 50%; tuning learning rate, increasing epochs, and using LeakyReLU helped improve it.
-
----
-
-## Inference via CLI
-
-Use the `predict.py` script to classify a Pokémon image:
-```bash
-python scripts/predict.py --image_path path/to/image.jpg
-```
-
-It prints the **top 5 most probable Pokémon** with their confidence scores.
-
-> Class names are loaded from `pokemon.txt`
 
 ---
 
